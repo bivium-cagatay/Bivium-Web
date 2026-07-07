@@ -1,11 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bivium Apps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #03031E;
+            border-radius: 8px;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            border-radius: 14px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p>This is a basic test HTML page.</p>
+    <div class="header">
+        <h1>Bivium Apps</h1>
+    </div>
+
+    <div class="container">
+        <p class="subtitle">
+            Support pages for all apps by Bivium.
+        </p>
+
+        <div class="grid">
+            <a href="beenthere/" class="card">
+                <img src="beenthere/logo.png" alt="BeenThereDoneThat logo" class="logo">
+                <h2>BeenThereDoneThat</h2>
+            </a>
+            <a href="corridor/" class="card">
+                <img src="corridor/logo.png" alt="Corridor logo" class="logo">
+                <h2>Corridor</h2>
+            </a>
+            <a href="dambudget/" class="card">
+                <img src="dambudget/logo.png" alt="DamBudget logo" class="logo">
+                <h2>DamBudget</h2>
+            </a>
+            <a href="daylogger/" class="card">
+                <img src="daylogger/logo.png" alt="DayLogger logo" class="logo">
+                <h2>DayLogger</h2>
+            </a>
+            <a href="devconnect/" class="card">
+                <img src="devconnect/logo.png" alt="DevConnect logo" class="logo">
+                <h2>DevConnect</h2>
+            </a>
+            <a href="trolltoll/" class="card">
+                <img src="trolltoll/logo.png" alt="TrollToll logo" class="logo">
+                <h2>TrollToll</h2>
+            </a>
+            <a href="xoxverse/" class="card">
+                <img src="xoxverse/logo.png" alt="XOXVerse logo" class="logo">
+                <h2>XOXVerse</h2>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
