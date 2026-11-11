@@ -3,139 +3,690 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOXVerse – 4 Variants of Tic-Tac-Toe</title>
+    <meta name="description" content="Classic, Quad, Ultimate and Stacker: four ways to play tic-tac-toe. Play locally with a friend, against the AI or online on iPhone and iPad.">
+    <meta name="apple-itunes-app" content="app-id=6786834691">
+    <meta property="og:title" content="XOXVerse – Tic-tac-toe, four ways.">
+    <meta property="og:description" content="Classic, Quad, Ultimate and Stacker. Play any variant locally, against the AI or online.">
+    <meta property="og:image" content="https://bivium.cagatay.app/xoxverse/logo.png">
+    <meta name="theme-color" content="#1c1c1e">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="favicon.png">
-    <title>XOXVerse</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --ink: #1c1c1e;
+            --bg: #f2f2f7;
+            --surface: #ffffff;
+            --text: #111114;
+            --muted: #5f5f68;
+            --line: rgba(17, 17, 20, 0.1);
+            --grid: rgba(17, 17, 20, 0.08);
+            --x: #0a84ff;
+            --o: #ff5a5f;
+            --green: #34a853;
+            --green-soft: #82c997;
+            --frame: #0b0b0b;
         }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0b0b0d;
+                --surface: #1a1a1e;
+                --text: #f2f2f5;
+                --muted: #a1a1ab;
+                --line: rgba(255, 255, 255, 0.09);
+                --grid: rgba(255, 255, 255, 0.08);
+                --green: #82c997;
+                --frame: #26262b;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 20px;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 32px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .card {
-            background: white;
-            border: 2px solid #82C997;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 24px;
+        a { color: inherit; }
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .card h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
+        /* Top bar */
+        .topbar {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            padding: 18px 0;
         }
 
-        .card p {
-            color: #666;
-            margin-bottom: 12px;
-        }
-
-        .card a {
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            width: 100%;
-            background: #82C997;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
             text-decoration: none;
         }
 
-        .icon {
-            width: 20px;
-            height: 20px;
+        .brand img {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0 80px;
+        }
+
+        /* X O X mark */
+        .xox {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .xox svg { width: 22px; height: 22px; }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 64px);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 .x { color: var(--x); }
+        .hero h1 .o { color: var(--o); }
+
+        .hero p.tagline {
+            font-size: clamp(18px, 2vw, 21px);
+            color: var(--muted);
+            max-width: 480px;
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-block;
+            transition: transform 0.15s ease;
+        }
+
+        .badge img {
+            display: block;
+            height: 54px;
+            width: auto;
+        }
+
+        .badge:hover { transform: translateY(-2px); }
+
+        .badge .on-dark { display: none; }
+
+        @media (prefers-color-scheme: dark) {
+            .badge .on-light { display: none; }
+            .badge .on-dark { display: block; }
+        }
+
+        .devices {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 14px;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            min-height: 560px;
+        }
+
+        /* Tic-tac-toe grid backdrop */
+        .hero-visual::before {
+            content: "";
+            position: absolute;
+            inset: 6% 2% 2% 2%;
+            background:
+                radial-gradient(circle at 35% 40%, rgba(10, 132, 255, 0.16), transparent 55%),
+                radial-gradient(circle at 70% 60%, rgba(255, 90, 95, 0.14), transparent 55%),
+                linear-gradient(var(--grid) 2px, transparent 2px) 0 0 / 72px 72px,
+                linear-gradient(90deg, var(--grid) 2px, transparent 2px) 0 0 / 72px 72px;
+            -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 35%, transparent 72%);
+            mask-image: radial-gradient(circle at 50% 45%, #000 35%, transparent 72%);
+            z-index: 0;
+        }
+
+        .hero-visual .phone { position: absolute; z-index: 1; }
+        .hero-visual .phone.front { width: 260px; left: 50%; top: 0; transform: translateX(-62%) rotate(-4deg); z-index: 2; }
+        .hero-visual .phone.back { width: 230px; left: 50%; top: 50px; transform: translateX(8%) rotate(5deg); }
+
+        /* Phone frame */
+        .phone {
+            width: 260px;
+            border-radius: 40px;
+            padding: 8px;
+            background: var(--frame);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        }
+
+        .phone img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1320 / 2868;
+            border-radius: 32px;
+            background: #fff;
+            object-fit: cover;
+        }
+
+        /* Variant overview */
+        .variants {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            padding-bottom: 70px;
+        }
+
+        .variant {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 20px;
+            text-decoration: none;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+
+        .variant:hover { transform: translateY(-2px); border-color: var(--x); }
+
+        .variant .mini {
+            display: grid;
+            gap: 3px;
+            width: 64px;
+            height: 64px;
+            margin-bottom: 14px;
+        }
+
+        .variant .mini span {
+            background: var(--grid);
+            border-radius: 3px;
+        }
+
+        .variant h3 { font-size: 18px; margin-bottom: 2px; }
+        .variant p { font-size: 14px; color: var(--muted); }
+
+        /* Features */
+        .feature {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+            padding: 60px 0;
+            border-top: 1px solid var(--line);
+            scroll-margin-top: 20px;
+        }
+
+        .feature:nth-of-type(even) .feature-visual { order: 2; }
+
+        .feature-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .feature-visual .phone { width: 250px; }
+
+        .feature h2 {
+            font-size: clamp(28px, 3.6vw, 40px);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin: 14px 0 12px;
+        }
+
+        .feature p {
+            font-size: 19px;
+            color: var(--muted);
+            max-width: 420px;
+        }
+
+        .feature p + p { margin-top: 8px; }
+
+        .tag {
+            display: inline-block;
+            width: 40px;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .list {
+            list-style: none;
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-width: 420px;
+        }
+
+        .list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 16px;
+        }
+
+        .list svg {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            color: var(--green);
+        }
+
+        /* Stacker sizes */
+        .sizes {
+            display: flex;
+            align-items: flex-end;
+            gap: 18px;
+            margin-top: 24px;
+        }
+
+        .sizes div {
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+        }
+
+        .sizes div span {
+            border-radius: 50%;
+            background: var(--x);
+            opacity: 0.9;
+        }
+
+        .sizes div span:nth-child(1) { width: 18px; height: 18px; }
+        .sizes div span:nth-child(2) { width: 30px; height: 30px; }
+        .sizes div span:nth-child(3) { width: 44px; height: 44px; }
+
+        .sizes span.ring {
+            background: none;
+            border: 4px solid var(--o);
+        }
+
+        .sizes .sep {
+            width: 1px;
+            height: 44px;
+            background: var(--line);
+        }
+
+        /* Mini boards for Ultimate / Quad */
+        .board {
+            display: grid;
+            gap: 4px;
+            margin-top: 24px;
+            width: 132px;
+        }
+
+        .board span {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: var(--grid);
+        }
+
+        .board.ultimate { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .board.ultimate span {
+            background:
+                linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 33.34% 33.34%,
+                linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 33.34% 33.34%,
+                var(--grid);
+        }
+        .board.ultimate span.active { outline: 2px solid var(--green-soft); outline-offset: -2px; }
+        .board.ultimate span.won-x { background: rgba(10, 132, 255, 0.22); }
+        .board.ultimate span.won-o { background: rgba(255, 90, 95, 0.22); }
+
+        .board.quad { grid-template-columns: repeat(6, 1fr); gap: 3px; width: 150px; }
+        .board.quad span.x { background: var(--x); }
+        .board.quad span.o { background: var(--o); }
+
+        /* iPad */
+        .ipad-section {
+            padding: 70px 0;
+            border-top: 1px solid var(--line);
+            text-align: center;
+        }
+
+        .ipad-section h2 {
+            font-size: clamp(28px, 3.6vw, 40px);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .ipad-section > p {
+            font-size: 19px;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        .tablet {
+            width: min(520px, 100%);
+            margin: 0 auto;
+            border-radius: 34px;
+            padding: 12px;
+            background: var(--frame);
+            box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        }
+
+        .tablet img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2064 / 2752;
+            border-radius: 24px;
+            background: #fff;
+            object-fit: cover;
+        }
+
+        /* CTA */
+        .cta {
+            margin: 20px 0 60px;
+            background: var(--ink);
+            color: #fff;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 56px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px) 0 0 / 64px 64px,
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 2px, transparent 2px) 0 0 / 64px 64px;
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 70%);
+            mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta > * { position: relative; }
+
+        .cta img.logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .cta h2 {
+            font-size: clamp(26px, 3.4vw, 36px);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .cta p { color: rgba(255, 255, 255, 0.7); margin-bottom: 28px; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 28px 0 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 28px;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+        footer a { text-decoration: none; }
+        footer a:hover { color: var(--text); text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .variants { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 20px;
+                gap: 20px;
+            }
+
+            .hero p.tagline { margin-left: auto; margin-right: auto; }
+
+            .hero-visual { min-height: 470px; }
+            .hero-visual .phone.front { width: 210px; }
+            .hero-visual .phone.back { width: 185px; top: 40px; }
+
+            .feature {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                text-align: center;
+                padding: 48px 0;
+            }
+
+            .feature:nth-of-type(even) .feature-visual { order: 0; }
+            .feature p { margin: 0 auto; }
+            .feature-visual .phone { width: 230px; }
+            .list { margin-left: auto; margin-right: auto; text-align: left; }
+            .sizes { justify-content: center; }
+            .board { margin-left: auto; margin-right: auto; }
+        }
+
+        @media (max-width: 420px) {
+            .list { grid-template-columns: 1fr; }
+            .variant { padding: 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>XOXVerse Support Center</h1>
-    </div>
-
-    <div class="container">
-        <p class="subtitle">
-            If you have any questions or feedback for XOXVerse, please contact us. We will get back to you as soon as possible.
-        </p>
-
-        <div class="card">
-            <h2>
-                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4zM12 11v2m0 4h.01" />
-                </svg>
-            Privacy Policy
-            </h2>
-            <p>Read our privacy policy to learn how XOXVerse handles your data.</p>
-            <a href="privacy.html" class="btn">
-                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4zM12 11v2m0 4h.01" />
-                </svg>
-                View Privacy Policy
+    <div class="wrap">
+        <header class="topbar">
+            <a href="./" class="brand">
+                <img src="logo.png" alt="">
+                XOXVerse
             </a>
-            <h2>
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Contact Support
-            </h2>
-            <p>Send us an email and we'll get back to you as soon as possible.</p>
-            <a href="mailto:xoxverse@cagatay.app?subject=Support Request" class="btn">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Send Email
+        </header>
+
+        <section class="hero">
+            <div>
+                <div class="xox" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="3.5" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff5a5f" stroke-width="3.5"><circle cx="12" cy="12" r="8"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="3.5" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+                </div>
+                <h1>Tic-tac-toe, <span class="x">four</span> <span class="o">ways</span>.</h1>
+                <p class="tagline">Classic, Quad, Ultimate and Stacker. Play any variant with a friend on the same device, against the AI or online.</p>
+                <a class="badge" href="https://apps.apple.com/app/id6786834691" target="_blank" rel="noopener">
+                    <img class="on-light" src="appstore-black.svg" alt="Download on the App Store">
+                    <img class="on-dark" src="appstore-white.svg" alt="Download on the App Store">
+                </a>
+                <p class="devices">Available for iPhone and iPad.</p>
+            </div>
+            <div class="hero-visual">
+                <div class="phone back"><img src="screenshots/01_Variants.webp" alt="XOXVerse variant picker with Local, Easy AI, Hard AI and Online modes"></div>
+                <div class="phone front"><img src="screenshots/03_Ultimate.webp" alt="An Ultimate tic-tac-toe game in progress"></div>
+            </div>
+        </section>
+
+        <nav class="variants" aria-label="Game variants">
+            <a class="variant" href="#classic">
+                <div class="mini" style="grid-template-columns: repeat(3, 1fr)" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <h3>Classic</h3>
+                <p>Three in a row</p>
             </a>
-        </div>
+            <a class="variant" href="#quad">
+                <div class="mini" style="grid-template-columns: repeat(6, 1fr); gap: 2px" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <h3>Quad</h3>
+                <p>Four in a row</p>
+            </a>
+            <a class="variant" href="#ultimate">
+                <div class="mini" style="grid-template-columns: repeat(3, 1fr); gap: 5px" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span style="background: rgba(10,132,255,0.35)"></span><span></span><span></span><span></span><span></span>
+                </div>
+                <h3>Ultimate</h3>
+                <p>Boards in a board</p>
+            </a>
+            <a class="variant" href="#stacker">
+                <div class="mini" style="grid-template-columns: repeat(3, 1fr)" aria-hidden="true">
+                    <span></span><span></span><span style="background: radial-gradient(circle, var(--o) 0 22%, transparent 24%), var(--grid)"></span>
+                    <span></span><span style="background: radial-gradient(circle, var(--x) 0 40%, transparent 42%), var(--grid)"></span><span></span>
+                    <span></span><span></span><span></span>
+                </div>
+                <h3>Stacker</h3>
+                <p>Bigger beats smaller</p>
+            </a>
+        </nav>
+
+        <main>
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/01_Variants.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--x) 50%, var(--o) 50%)"></span>
+                    <h2>4 variants of tic-tac-toe</h2>
+                    <p>Swipe through the variants and pick how you want to play.</p>
+                    <p>Pass the phone to a friend, take on the AI or find an opponent online.</p>
+                    <ul class="list">
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.36-1.86M17 20H7m10 0v-2c0-.66-.13-1.28-.36-1.86M7 20H2v-2a3 3 0 015.36-1.86M7 20v-2c0-.66.13-1.28.36-1.86m0 0a5 5 0 019.28 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Local
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+                            Easy AI
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            Hard AI
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                            Online
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="feature" id="stacker">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/02_Stacker.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--x)"></span>
+                    <h2>Stacker</h2>
+                    <p>Cover smaller pieces with bigger ones.</p>
+                    <p>Every piece comes in three sizes. Place yours on top of a smaller one to steal the square.</p>
+                    <div class="sizes" aria-hidden="true">
+                        <div><span></span><span></span><span></span></div>
+                        <span class="sep"></span>
+                        <div><span class="ring"></span><span class="ring"></span><span class="ring"></span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="feature" id="ultimate">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/03_Ultimate.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--green-soft)"></span>
+                    <h2>Ultimate</h2>
+                    <p>Play 9 small boards to win the big one.</p>
+                    <p>Where you move decides where your opponent plays next. Think two boards ahead.</p>
+                    <div class="board ultimate" aria-hidden="true">
+                        <span class="won-x"></span><span></span><span></span>
+                        <span></span><span class="won-o"></span><span></span>
+                        <span></span><span class="active"></span><span class="won-x"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="feature" id="quad">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/04_Quad.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--o)"></span>
+                    <h2>Quad</h2>
+                    <p>Connect 4 on a bigger board.</p>
+                    <p>More room to plan, more ways to block. Line up four before your opponent does.</p>
+                    <div class="board quad" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span class="x"></span><span class="x"></span><span class="o"></span><span class="o"></span><span></span>
+                        <span></span><span></span><span></span><span class="x"></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="feature" id="classic">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/05_Classic.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--ink)"></span>
+                    <h2>Classic</h2>
+                    <p>The game everyone knows.</p>
+                    <p>Three in a row on a 3×3 board. Quick to learn, perfect for a fast rematch.</p>
+                </div>
+            </section>
+
+            <section class="ipad-section">
+                <h2>Bigger boards on iPad</h2>
+                <p>Every variant looks great on the big screen.</p>
+                <div class="tablet"><img src="screenshots/iPad_03_Ultimate.webp" alt="XOXVerse Ultimate running on iPad" loading="lazy"></div>
+            </section>
+
+            <section class="cta">
+                <img class="logo" src="logo.png" alt="XOXVerse app icon">
+                <h2>Ready for a rematch?</h2>
+                <p>Pick a variant and challenge a friend, the AI or players online.</p>
+                <a class="badge" href="https://apps.apple.com/app/id6786834691" target="_blank" rel="noopener">
+                    <img src="appstore-white.svg" alt="Download on the App Store">
+                </a>
+            </section>
+        </main>
+
+        <footer>
+            <span>© Bivium</span>
+            <nav>
+                <a href="support.html">Support</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="mailto:xoxverse@cagatay.app">Contact</a>
+                <a href="../">More apps by Bivium</a>
+            </nav>
+        </footer>
     </div>
 </body>
 </html>
