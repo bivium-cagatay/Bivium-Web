@@ -3,139 +3,620 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevConnect – App Store Connect Analytics, ASO and Reviews</title>
+    <meta name="description" content="Track downloads and sales, improve your ASO score, translate and reply to reviews, and adjust regional pricing for your App Store apps on iPhone and iPad. Requests go directly to App Store Connect.">
+    <meta name="apple-itunes-app" content="app-id=6767549042">
+    <meta property="og:title" content="DevConnect – Track and manage your apps on the App Store">
+    <meta property="og:description" content="Downloads, sales, ASO, reviews and regional pricing for your App Store apps — all in one place.">
+    <meta property="og:image" content="https://bivium.cagatay.app/devconnect/logo.png">
+    <meta name="theme-color" content="#120A1F">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="favicon.png">
-    <title>DevConnect</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --ink: #120A1F;
+            --bg: #f6f4fa;
+            --surface: #ffffff;
+            --text: #16111f;
+            --muted: #5f5870;
+            --line: rgba(22, 17, 31, 0.1);
+            --bar-alpha: 0.22;
+            --glow: rgba(127, 25, 230, 0.22);
+            --brand: #8B4DF0;
+            --brand-deep: #7F19E6;
+            --blue: #0A84FF;
+            --green: #30D158;
+            --yellow: #FFD60A;
+            --red: #FF453A;
+            --frame: #0b0b14;
         }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #09070d;
+                --surface: #15111c;
+                --text: #f2eff7;
+                --muted: #a59eb2;
+                --line: rgba(255, 255, 255, 0.09);
+                --bar-alpha: 0.2;
+                --glow: rgba(139, 77, 240, 0.2);
+                --brand-deep: #A274F5;
+                --frame: #262a36;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 20px;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 32px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .card {
-            background: white;
-            border: 2px solid #7F19E6;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 24px;
+        a { color: inherit; }
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .card h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
+        /* Top bar */
+        .topbar {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            padding: 18px 0;
         }
 
-        .card p {
-            color: #666;
-            margin-bottom: 12px;
-        }
-
-        .card a {
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            width: 100%;
-            background: #7F19E6;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
             text-decoration: none;
         }
 
-        .icon {
-            width: 20px;
-            height: 20px;
+        .brand img {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0 80px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 12px;
+            margin-right: 2px;
+        }
+
+        .bars i {
+            width: 4px;
+            border-radius: 1.5px;
+            background: var(--brand);
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 64px);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span { color: var(--brand-deep); }
+
+        .hero p.tagline {
+            font-size: clamp(18px, 2vw, 21px);
+            color: var(--muted);
+            max-width: 480px;
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-block;
+            transition: transform 0.15s ease;
+        }
+
+        .badge img {
+            display: block;
+            height: 54px;
+            width: auto;
+        }
+
+        .badge:hover { transform: translateY(-2px); }
+
+        .badge .on-dark { display: none; }
+
+        @media (prefers-color-scheme: dark) {
+            .badge .on-light { display: none; }
+            .badge .on-dark { display: block; }
+        }
+
+        .devices {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 14px;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            min-height: 560px;
+        }
+
+        /* Rising bar chart backdrop, inspired by the app icon */
+        .hero-visual::before {
+            content: "";
+            position: absolute;
+            inset: 6% 4% 4% 4%;
+            background:
+                linear-gradient(var(--brand), var(--brand)) 8% 100% / 11% 34% no-repeat,
+                linear-gradient(var(--brand), var(--brand)) 23% 100% / 11% 52% no-repeat,
+                linear-gradient(var(--brand), var(--brand)) 38% 100% / 11% 44% no-repeat,
+                linear-gradient(var(--brand), var(--brand)) 53% 100% / 11% 70% no-repeat,
+                linear-gradient(var(--brand), var(--brand)) 68% 100% / 11% 62% no-repeat,
+                linear-gradient(var(--brand), var(--brand)) 83% 100% / 11% 88% no-repeat;
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, var(--bar-alpha)) 35%, transparent 72%);
+            mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, var(--bar-alpha)) 35%, transparent 72%);
+            z-index: 0;
+        }
+
+        .hero-visual::after {
+            content: "";
+            position: absolute;
+            inset: 6% 2% 2% 2%;
+            background: radial-gradient(circle at 50% 45%, var(--glow), transparent 65%);
+            z-index: 0;
+        }
+
+        .hero-visual .phone { position: absolute; z-index: 1; }
+        .hero-visual .phone.front { width: 260px; left: 50%; top: 0; transform: translateX(-62%) rotate(-4deg); z-index: 2; }
+        .hero-visual .phone.back { width: 230px; left: 50%; top: 50px; transform: translateX(8%) rotate(5deg); }
+
+        /* Phone frame */
+        .phone {
+            width: 260px;
+            border-radius: 40px;
+            padding: 8px;
+            background: var(--frame);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        }
+
+        .phone img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1320 / 2868;
+            border-radius: 32px;
+            background: #000;
+            object-fit: cover;
+        }
+
+        /* Promise strip */
+        .promises {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            padding-bottom: 70px;
+        }
+
+        .promises div {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .promises svg {
+            width: 24px;
+            height: 24px;
+            color: var(--brand-deep);
+            margin-bottom: 8px;
+        }
+
+        .promises strong { display: block; font-size: 16px; }
+        .promises span { font-size: 14px; color: var(--muted); }
+
+        /* Features */
+        .feature {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+            padding: 60px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .feature:nth-of-type(even) .feature-visual { order: 2; }
+
+        .feature-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .feature-visual .phone { width: 250px; }
+
+        .feature h2 {
+            font-size: clamp(28px, 3.6vw, 40px);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin: 14px 0 12px;
+        }
+
+        .feature p {
+            font-size: 19px;
+            color: var(--muted);
+            max-width: 420px;
+        }
+
+        .feature p + p { margin-top: 8px; }
+
+        .tag {
+            display: inline-block;
+            width: 40px;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .list {
+            list-style: none;
+            margin-top: 22px;
+            display: grid;
+            gap: 10px;
+            max-width: 420px;
+        }
+
+        .list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 16px;
+        }
+
+        .list svg {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            color: var(--brand-deep);
+        }
+
+        /* iPad */
+        .ipad-section {
+            padding: 70px 0;
+            border-top: 1px solid var(--line);
+            text-align: center;
+        }
+
+        .ipad-section h2 {
+            font-size: clamp(28px, 3.6vw, 40px);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .ipad-section > p {
+            font-size: 19px;
+            color: var(--muted);
+            max-width: 560px;
+            margin: 0 auto 40px;
+        }
+
+        .tablet {
+            width: min(520px, 100%);
+            margin: 0 auto;
+            border-radius: 34px;
+            padding: 12px;
+            background: var(--frame);
+            box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        }
+
+        .tablet img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2064 / 2752;
+            border-radius: 24px;
+            background: #000;
+            object-fit: cover;
+        }
+
+        /* CTA */
+        .cta {
+            margin: 20px 0 60px;
+            background: var(--ink);
+            color: #fff;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 56px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta img.logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .cta h2 {
+            font-size: clamp(26px, 3.4vw, 36px);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .cta p { color: rgba(255, 255, 255, 0.7); margin-bottom: 28px; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 28px 0 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 28px;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+        footer a { text-decoration: none; }
+        footer a:hover { color: var(--text); text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .promises { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 20px;
+                gap: 20px;
+            }
+
+            .hero p.tagline { margin-left: auto; margin-right: auto; }
+
+            .hero-visual { min-height: 470px; }
+            .hero-visual .phone.front { width: 210px; }
+            .hero-visual .phone.back { width: 185px; top: 40px; }
+
+            .feature {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                text-align: center;
+                padding: 48px 0;
+            }
+
+            .feature:nth-of-type(even) .feature-visual { order: 0; }
+            .feature p { margin: 0 auto; }
+            .feature-visual .phone { width: 230px; }
+            .list { margin-left: auto; margin-right: auto; text-align: left; }
+        }
+
+        @media (max-width: 460px) {
+            .promises { gap: 10px; padding-bottom: 50px; }
+            .promises div { padding: 14px; }
+            .promises strong { font-size: 15px; }
+            .promises span { font-size: 13px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>DevConnect Support Center</h1>
-    </div>
-
-    <div class="container">
-        <p class="subtitle">
-            If you have any questions or feedback for DevConnect, please contact us. We will get back to you as soon as possible.
-        </p>
-
-        <div class="card">
-            <h2>
-                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4zM12 11v2m0 4h.01" />
-                </svg>
-            Privacy Policy
-            </h2>
-            <p>Read our privacy policy to learn how DevConnect handles your data.</p>
-            <a href="privacy.html" class="btn">
-                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4zM12 11v2m0 4h.01" />
-                </svg>
-                View Privacy Policy
+    <div class="wrap">
+        <header class="topbar">
+            <a href="./" class="brand">
+                <img src="logo.png" alt="">
+                DevConnect
             </a>
-            <h2>
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Contact Support
-            </h2>
-            <p>Send us an email and we'll get back to you as soon as possible.</p>
-            <a href="mailto:devconnect@cagatay.app?subject=Support Request" class="btn">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Send Email
-            </a>
-        </div>
+        </header>
+
+        <section class="hero">
+            <div>
+                <div class="eyebrow">
+                    <span class="bars" aria-hidden="true">
+                        <i style="height: 45%"></i>
+                        <i style="height: 70%"></i>
+                        <i style="height: 100%"></i>
+                    </span>
+                    For indie developers · No ads · No tracking
+                </div>
+                <h1>Your App Store, <span>in your pocket.</span></h1>
+                <p class="tagline">Track every download and sale, improve your ASO score, read and reply to reviews, and adjust regional pricing — straight from your iPhone and iPad.</p>
+                <a class="badge" href="https://apps.apple.com/app/id6767549042" target="_blank" rel="noopener">
+                    <img class="on-light" src="appstore-black.svg" alt="Download on the App Store">
+                    <img class="on-dark" src="appstore-white.svg" alt="Download on the App Store">
+                </a>
+                <p class="devices">Available for iPhone and iPad.</p>
+            </div>
+            <div class="hero-visual">
+                <div class="phone back"><img src="screenshots/02_ASO.webp" alt="ASO grades for app name, subtitle and keywords"></div>
+                <div class="phone front"><img src="screenshots/01_Reports.webp" alt="Downloads chart with impressions, page views, sales and proceeds"></div>
+            </div>
+        </section>
+
+        <section class="promises">
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4z M9 12l2 2 4-4"/></svg>
+                <strong>No middleman</strong>
+                <span>Requests go directly to App Store Connect.</span>
+            </div>
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                <strong>Keys stay safe</strong>
+                <span>Your API key is saved to the system Keychain.</span>
+            </div>
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+                <strong>All your apps</strong>
+                <span>Combined analytics in one dashboard.</span>
+            </div>
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.36 6.64A9 9 0 015.64 19.36M18.36 6.64A9 9 0 005.64 19.36M18.36 6.64L5.64 19.36"/></svg>
+                <strong>No ads, no tracking</strong>
+                <span>No analytics or third-party SDKs.</span>
+            </div>
+        </section>
+
+        <main>
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/01_Reports.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--blue) 70%, var(--green) 70%)"></span>
+                    <h2>Track every download and sale</h2>
+                    <p>Monitor downloads, installs, discovery, engagement and sales across different time periods.</p>
+                    <p>Break everything down by country and product, from impressions to proceeds.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/02_ASO.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--green) 33%, var(--yellow) 33% 66%, var(--red) 66%)"></span>
+                    <h2>Improve your ASO score</h2>
+                    <p>Grade your title, subtitle and keywords for every locale.</p>
+                    <p>Get clear suggestions — unused characters, repeated words — to improve discoverability.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/03_Reviews.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--yellow)"></span>
+                    <h2>Translate and read reviews on device</h2>
+                    <p>Browse the latest reviews from every region and translate them inline, right on your device.</p>
+                    <p>Reply to your users without leaving the app.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/04_Pricing.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--brand) 50%, var(--green) 50%)"></span>
+                    <h2>Adjust regional pricing</h2>
+                    <p>Set purchasing power parity prices for all territories automatically — for apps, in-app purchases and subscriptions.</p>
+                    <p>Browse offer codes and copy one-time use codes to share.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/05_Screenshots.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--red) 30%, var(--brand) 30%)"></span>
+                    <h2>Analyze your store screenshots for typos</h2>
+                    <p>Preview your screenshots by device and locale, and find possible typos before your users do.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/06_Info.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--blue)"></span>
+                    <h2>Glance at essential info and share easily</h2>
+                    <p>See localized metadata and categories alongside app and version details.</p>
+                    <p>Share your app's link in a tap.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/07_Apps_List.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--green) 50%, var(--yellow) 50%)"></span>
+                    <h2>See status of all your apps</h2>
+                    <p>Browse the apps linked to your App Store Connect account with their version and review status. Hide the ones you don't need.</p>
+                    <ul class="list">
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+                            All Apps dashboard
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            App Status widget
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            Downloads widget
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Proceeds widget
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="ipad-section">
+                <h2>Made for iPad, too</h2>
+                <p>Dig into your reports on the big screen.</p>
+                <div class="tablet"><img src="screenshots/iPad_01_Reports.webp" alt="DevConnect reports on iPad" loading="lazy"></div>
+            </section>
+
+            <section class="cta">
+                <img class="logo" src="logo.png" alt="DevConnect app icon">
+                <h2>Everything you need to grow your apps.</h2>
+                <p>Connect your App Store Connect API key and get started on iPhone and iPad.</p>
+                <a class="badge" href="https://apps.apple.com/app/id6767549042" target="_blank" rel="noopener">
+                    <img src="appstore-white.svg" alt="Download on the App Store">
+                </a>
+            </section>
+        </main>
+
+        <footer>
+            <span>© Bivium</span>
+            <nav>
+                <a href="support.html">Support</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="mailto:devconnect@cagatay.app">Contact</a>
+                <a href="../">More apps by Bivium</a>
+            </nav>
+        </footer>
     </div>
 </body>
 </html>
