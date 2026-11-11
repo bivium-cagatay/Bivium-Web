@@ -3,139 +3,603 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DayLogger – Privacy First Daily Activity Logger</title>
+    <meta name="description" content="Log every hour of your day and your daily mood on iPhone and iPad. Discover how your activities affect how you feel. No ads, no tracking — your data stays in your iCloud account.">
+    <meta name="apple-itunes-app" content="app-id=6758235865">
+    <meta property="og:title" content="DayLogger – Privacy First Daily Activity Logger">
+    <meta property="og:description" content="Log your mood and activities hour by hour, and find out how they are connected with beautiful charts.">
+    <meta property="og:image" content="https://bivium.cagatay.app/daylogger/logo.png">
+    <meta name="theme-color" content="#0B1418">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="favicon.png">
-    <title>DayLogger</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --ink: #0B1418;
+            --bg: #f3f7f8;
+            --surface: #ffffff;
+            --text: #0f1a1e;
+            --muted: #5a6670;
+            --line: rgba(15, 26, 30, 0.1);
+            --bar-alpha: 0.16;
+            --glow: rgba(71, 207, 235, 0.35);
+            --brand: #47CFEB;
+            --brand-deep: #1A9FBF;
+            --red: #E0443A;
+            --orange: #F0A030;
+            --sand: #C9A15A;
+            --blue: #2F5BE0;
+            --purple: #8A3FE0;
+            --mood-good: #6FD46B;
+            --mood-normal: #F2E14E;
+            --mood-bad: #E46A6A;
+            --frame: #0b0b14;
         }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #070c0e;
+                --surface: #111a1e;
+                --text: #eef4f6;
+                --muted: #9fafb6;
+                --line: rgba(255, 255, 255, 0.09);
+                --bar-alpha: 0.12;
+                --glow: rgba(71, 207, 235, 0.16);
+                --brand-deep: #47CFEB;
+                --frame: #262a36;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 20px;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 32px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .card {
-            background: white;
-            border: 2px solid #47CFEB;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 24px;
+        a { color: inherit; }
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .card h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
+        /* Top bar */
+        .topbar {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            padding: 18px 0;
         }
 
-        .card p {
-            color: #666;
-            margin-bottom: 12px;
-        }
-
-        .card a {
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            width: 100%;
-            background: #47CFEB;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
             text-decoration: none;
         }
 
-        .icon {
-            width: 20px;
-            height: 20px;
+        .brand img {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0 80px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .moods {
+            display: inline-flex;
+            gap: 3px;
+            margin-right: 2px;
+        }
+
+        .moods i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 64px);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span { color: var(--brand-deep); }
+
+        .hero p.tagline {
+            font-size: clamp(18px, 2vw, 21px);
+            color: var(--muted);
+            max-width: 480px;
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-block;
+            transition: transform 0.15s ease;
+        }
+
+        .badge img {
+            display: block;
+            height: 54px;
+            width: auto;
+        }
+
+        .badge:hover { transform: translateY(-2px); }
+
+        .badge .on-dark { display: none; }
+
+        @media (prefers-color-scheme: dark) {
+            .badge .on-light { display: none; }
+            .badge .on-dark { display: block; }
+        }
+
+        .devices {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 14px;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            min-height: 560px;
+        }
+
+        /* Hourly timeline backdrop, inspired by the app icon */
+        .hero-visual::before {
+            content: "";
+            position: absolute;
+            inset: 6% 0 2% 0;
+            background:
+                linear-gradient(90deg, var(--red) 0 46%, transparent 46% 50%, var(--orange) 50% 62%, transparent 62%) 8% 14% / 92% 22px no-repeat,
+                linear-gradient(90deg, var(--sand) 0 30%, transparent 30% 34%, var(--blue) 34% 70%, transparent 70%) 8% 32% / 92% 22px no-repeat,
+                linear-gradient(90deg, var(--blue) 0 14%, transparent 14% 18%, var(--purple) 18% 66%, transparent 66% 70%, var(--brand) 70% 92%, transparent 92%) 8% 50% / 92% 22px no-repeat,
+                linear-gradient(90deg, var(--brand) 0 38%, transparent 38% 42%, var(--red) 42% 56%, transparent 56% 60%, var(--purple) 60% 88%, transparent 88%) 8% 68% / 92% 22px no-repeat,
+                linear-gradient(90deg, var(--orange) 0 22%, transparent 22% 26%, var(--sand) 26% 64%, transparent 64%) 8% 86% / 92% 22px no-repeat;
+            -webkit-mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, var(--bar-alpha)) 40%, transparent 72%);
+            mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, var(--bar-alpha)) 40%, transparent 72%);
+            border-radius: 11px;
+            z-index: 0;
+        }
+
+        .hero-visual::after {
+            content: "";
+            position: absolute;
+            inset: 6% 2% 2% 2%;
+            background: radial-gradient(circle at 50% 45%, var(--glow), transparent 65%);
+            z-index: 0;
+        }
+
+        .hero-visual .phone { position: absolute; z-index: 1; }
+        .hero-visual .phone.front { width: 260px; left: 50%; top: 0; transform: translateX(-62%) rotate(-4deg); z-index: 2; }
+        .hero-visual .phone.back { width: 230px; left: 50%; top: 50px; transform: translateX(8%) rotate(5deg); }
+
+        /* Phone frame */
+        .phone {
+            width: 260px;
+            border-radius: 40px;
+            padding: 8px;
+            background: var(--frame);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        }
+
+        .phone img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1320 / 2868;
+            border-radius: 32px;
+            background: #000;
+            object-fit: cover;
+        }
+
+        /* Promise strip */
+        .promises {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            padding-bottom: 70px;
+        }
+
+        .promises div {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .promises svg {
+            width: 24px;
+            height: 24px;
+            color: var(--brand-deep);
+            margin-bottom: 8px;
+        }
+
+        .promises strong { display: block; font-size: 16px; }
+        .promises span { font-size: 14px; color: var(--muted); }
+
+        /* Features */
+        .feature {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+            padding: 60px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .feature:nth-of-type(even) .feature-visual { order: 2; }
+
+        .feature-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .feature-visual .phone { width: 250px; }
+        .feature-visual.pair .phone { width: 220px; }
+        .feature-visual.pair .phone:last-child { margin-top: 40px; }
+
+        .feature h2 {
+            font-size: clamp(28px, 3.6vw, 40px);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin: 14px 0 12px;
+        }
+
+        .feature p {
+            font-size: 19px;
+            color: var(--muted);
+            max-width: 420px;
+        }
+
+        .feature p + p { margin-top: 8px; }
+
+        .tag {
+            display: inline-block;
+            width: 40px;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .list {
+            list-style: none;
+            margin-top: 22px;
+            display: grid;
+            gap: 10px;
+            max-width: 420px;
+        }
+
+        .list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 16px;
+        }
+
+        .list svg {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            color: var(--brand-deep);
+        }
+
+        /* iPad */
+        .ipad-section {
+            padding: 70px 0;
+            border-top: 1px solid var(--line);
+            text-align: center;
+        }
+
+        .ipad-section h2 {
+            font-size: clamp(28px, 3.6vw, 40px);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .ipad-section > p {
+            font-size: 19px;
+            color: var(--muted);
+            max-width: 560px;
+            margin: 0 auto 40px;
+        }
+
+        .tablet {
+            width: min(520px, 100%);
+            margin: 0 auto;
+            border-radius: 34px;
+            padding: 12px;
+            background: var(--frame);
+            box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        }
+
+        .tablet img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2064 / 2752;
+            border-radius: 24px;
+            background: #000;
+            object-fit: cover;
+        }
+
+        /* CTA */
+        .cta {
+            margin: 20px 0 60px;
+            background: var(--ink);
+            color: #fff;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 56px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta img.logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .cta h2 {
+            font-size: clamp(26px, 3.4vw, 36px);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .cta p { color: rgba(255, 255, 255, 0.7); margin-bottom: 28px; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 28px 0 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 28px;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+        footer a { text-decoration: none; }
+        footer a:hover { color: var(--text); text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .promises { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 20px;
+                gap: 20px;
+            }
+
+            .hero p.tagline { margin-left: auto; margin-right: auto; }
+
+            .hero-visual { min-height: 470px; }
+            .hero-visual .phone.front { width: 210px; }
+            .hero-visual .phone.back { width: 185px; top: 40px; }
+
+            .feature {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                text-align: center;
+                padding: 48px 0;
+            }
+
+            .feature:nth-of-type(even) .feature-visual { order: 0; }
+            .feature p { margin: 0 auto; }
+            .feature-visual .phone { width: 230px; }
+            .feature-visual.pair .phone { width: 46%; max-width: 200px; border-radius: 30px; padding: 6px; }
+            .feature-visual.pair .phone img { border-radius: 25px; }
+            .list { margin-left: auto; margin-right: auto; text-align: left; }
+        }
+
+        @media (max-width: 460px) {
+            .promises { gap: 10px; padding-bottom: 50px; }
+            .promises div { padding: 14px; }
+            .promises strong { font-size: 15px; }
+            .promises span { font-size: 13px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>DayLogger Support Center</h1>
-    </div>
-
-    <div class="container">
-        <p class="subtitle">
-            If you have any questions or feedback for DayLogger, please contact us. We will get back to you as soon as possible.
-        </p>
-
-        <div class="card">
-            <h2>
-                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4zM12 11v2m0 4h.01" />
-                </svg>
-            Privacy Policy
-            </h2>
-            <p>Read our privacy policy to learn how DayLogger handles your data.</p>
-            <a href="privacy.html" class="btn">
-                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4zM12 11v2m0 4h.01" />
-                </svg>
-                View Privacy Policy
+    <div class="wrap">
+        <header class="topbar">
+            <a href="./" class="brand">
+                <img src="logo.png" alt="">
+                DayLogger
             </a>
-            <h2>
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Contact Support
-            </h2>
-            <p>Send us an email and we'll get back to you as soon as possible.</p>
-            <a href="mailto:daylogger@cagatay.app?subject=Support Request" class="btn">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Send Email
-            </a>
-        </div>
+        </header>
+
+        <section class="hero">
+            <div>
+                <div class="eyebrow">
+                    <span class="moods" aria-hidden="true">
+                        <i style="background: var(--mood-bad)"></i>
+                        <i style="background: var(--mood-normal)"></i>
+                        <i style="background: var(--mood-good)"></i>
+                    </span>
+                    One-time purchase · No ads · No tracking
+                </div>
+                <h1>Privacy first daily <span>activity logger.</span></h1>
+                <p class="tagline">Log every hour of your day and how you feel. Discover how your activities and your mood are connected — while your data stays in your iCloud account.</p>
+                <a class="badge" href="https://apps.apple.com/app/id6758235865" target="_blank" rel="noopener">
+                    <img class="on-light" src="appstore-black.svg" alt="Download on the App Store">
+                    <img class="on-dark" src="appstore-white.svg" alt="Download on the App Store">
+                </a>
+                <p class="devices">Available for iPhone and iPad.</p>
+            </div>
+            <div class="hero-visual">
+                <div class="phone back"><img src="screenshots/03_Statistics_Chart_1.webp" alt="Activity hours chart and mood ratio"></div>
+                <div class="phone front"><img src="screenshots/01_Overview.webp" alt="Monthly calendar with daily moods and an hourly activity timeline"></div>
+            </div>
+        </section>
+
+        <section class="promises">
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l7 4v6c0 5.25-3.5 9.75-7 10-3.5-.25-7-4.75-7-10V6l7-4z M9 12l2 2 4-4"/></svg>
+                <strong>No data collected</strong>
+                <span>Nothing is sent to third-party servers.</span>
+            </div>
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                <strong>iCloud sync</strong>
+                <span>Your logs on all your devices.</span>
+            </div>
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <strong>Hour by hour</strong>
+                <span>See exactly where your day went.</span>
+            </div>
+            <div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.36 6.64A9 9 0 015.64 19.36M18.36 6.64A9 9 0 005.64 19.36M18.36 6.64L5.64 19.36"/></svg>
+                <strong>No ads</strong>
+                <span>Just your day, nothing in the way.</span>
+            </div>
+        </section>
+
+        <main>
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/02_Configure_DayLog.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--red) 33%, var(--brand) 33% 66%, var(--purple) 66%)"></span>
+                    <h2>Log your mood and activities</h2>
+                    <p>Pick how you felt today and paint your hours with activities — sleeping, working, gym, dinner with friends.</p>
+                    <p>Add a note and photos to remember the day.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/03_Statistics_Chart_1.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--mood-bad) 33%, var(--mood-normal) 33% 66%, var(--mood-good) 66%)"></span>
+                    <h2>Track your mood change</h2>
+                    <p>See how many hours you spent on each activity and how your good, normal and bad days add up.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/04_Statistics_Chart_2.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--mood-good), var(--mood-normal), var(--mood-bad))"></span>
+                    <h2>Detect patterns</h2>
+                    <p>Find out which activities lift your mood and which days of the week feel best.</p>
+                    <p>Understand yourself with beautiful charts.</p>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/05_Widgets.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: var(--brand)"></span>
+                    <h2>Choose a Widget</h2>
+                    <p>Keep your days on your Home Screen.</p>
+                    <ul class="list">
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h2m4 0h2m4 0h2M4 10h2m4 0h2m4 0h2M4 15h2m4 0h2m4 0h2M4 20h2m4 0h2"/></svg>
+                            Your year in moods
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Monthly activity calendar
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.83 14.83a4 4 0 01-5.66 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Mood picker
+                        </li>
+                        <li>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 109 9h-9V3z M15 3.5A9 9 0 0120.5 9H15V3.5z"/></svg>
+                            Mood ratio and trend charts
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="feature">
+                <div class="feature-visual">
+                    <div class="phone"><img src="screenshots/06_Activities.webp" alt="" loading="lazy"></div>
+                </div>
+                <div>
+                    <span class="tag" style="background: linear-gradient(90deg, var(--orange) 50%, var(--purple) 50%)"></span>
+                    <h2>Personalize activities</h2>
+                    <p>Create your own activities and choose how they look with an emoji and a color.</p>
+                    <p>Cafe, cinema, reading, studying — make the list yours.</p>
+                </div>
+            </section>
+
+            <section class="ipad-section">
+                <h2>Made for iPad, too</h2>
+                <p>Log your day on the big screen. Everything syncs with your iPhone through iCloud.</p>
+                <div class="tablet"><img src="screenshots/iPad_01_Overview.webp" alt="DayLogger overview on iPad" loading="lazy"></div>
+            </section>
+
+            <section class="cta">
+                <img class="logo" src="logo.png" alt="DayLogger app icon">
+                <h2>Make every hour count.</h2>
+                <p>Buy once for iPhone and iPad. No ads, no subscriptions, no tracking.</p>
+                <a class="badge" href="https://apps.apple.com/app/id6758235865" target="_blank" rel="noopener">
+                    <img src="appstore-white.svg" alt="Download on the App Store">
+                </a>
+            </section>
+        </main>
+
+        <footer>
+            <span>© Bivium</span>
+            <nav>
+                <a href="support.html">Support</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="mailto:daylogger@cagatay.app">Contact</a>
+                <a href="../">More apps by Bivium</a>
+            </nav>
+        </footer>
     </div>
 </body>
 </html>
