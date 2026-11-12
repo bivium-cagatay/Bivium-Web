@@ -1,0 +1,17 @@
+# Bivium Apps
+
+> Bivium is an independent developer of apps for iPhone and iPad. Each app has a landing page, a support page and a privacy policy on this site, plus an App Store listing.
+
+## Apps
+
+- [BorderMark](https://bivium.cagatay.app/bordermark/): Travel map and trip planner. Mark countries you've lived in, visited or want to visit, share your map as a photo or video, plan trip itineraries, view travel statistics and play border/flag quizzes. [App Store](https://apps.apple.com/app/id6478878671)
+- [Corridor](https://bivium.cagatay.app/corridor/): 2 player abstract strategy board game. Race your pawn to the other side of the board and block your opponent with walls. [App Store](https://apps.apple.com/app/id6760299769)
+- [DamBudget](https://bivium.cagatay.app/dambudget/): Completely free, privacy-first budget planner and expense tracker. No ads, no paywalls, no data collected; data stays in the user's Apple account. [App Store](https://apps.apple.com/app/id6751598313)
+- [DayLogger](https://bivium.cagatay.app/daylogger/): Privacy-first daily activity and mood logger. Log every hour of your day and see how activities affect mood with charts. One-time purchase, no ads, no tracking. [App Store](https://apps.apple.com/app/id6758235865)
+- [DevConnect](https://bivium.cagatay.app/devconnect/): App Store Connect companion for developers. Track downloads and sales, improve ASO score, translate and reply to reviews, adjust regional pricing. Requests go directly to App Store Connect. [App Store](https://apps.apple.com/app/id6767549042)
+- [RevealPic](https://bivium.cagatay.app/revealpic/): Pixel guess game. Guess what's in a pixelated picture as it gets sharper; play solo or against a friend in real time. [App Store](https://apps.apple.com/app/id6818106993)
+- [XOXVerse](https://bivium.cagatay.app/xoxverse/): Four variants of tic-tac-toe (Classic, Quad, Ultimate, Stacker). Play locally with a friend, against the AI or online. [App Store](https://apps.apple.com/app/id6786834691)
+
+## Support and privacy
+
+Each app has a support page at `/<app>/support.html` and a privacy policy at `/<app>/privacy.html`, e.g. https://bivium.cagatay.app/dambudget/privacy.html
